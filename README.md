@@ -44,7 +44,7 @@ The question behind this project: *what would you find if you sorted GitHub by e
 
 ## How we found them
 
-We queried the [GitHub Archive](https://www.gharchive.org/) — a public record of all GitHub events — using BigQuery. The query went through **five iterations** to filter out noise and surface genuinely high-effort projects.
+We queried the [GitHub Archive](https://www.gharchive.org/) — a public record of all GitHub events — using BigQuery. The query went through **six iterations** (v1–v5, then v6.1) to filter out noise and surface genuinely high-effort projects. v6.1 is the final version — it extended the date range to cover 2025 and early 2026, raised the activity threshold to 8+ active months, and added more noise filter patterns.
 
 See [`queries/README.md`](queries/README.md) for a full description of each iteration and what we learned.
 
@@ -61,7 +61,7 @@ ghost-repos/
 ├── docs/
 │   └── index.html    # Browser-based data explorer (served via GitHub Pages)
 ├── queries/
-│   └── README.md     # Five SQL iterations with descriptions
+│   └── README.md     # Six SQL iterations with descriptions (v6.1 is final)
 ├── scripts/
 │   ├── main.py       # v5 scoring pipeline (two-stage GitHub API verification)
 │   └── githubtest.py # v2 scoring pipeline (earlier, simpler version)

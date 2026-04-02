@@ -1,8 +1,10 @@
 # SQL Query Iterations
 
-The BigQuery queries that produced the raw data went through five iterations (v1–v5). The SQL files for v2–v5 are in this folder. v1 was a dead end abandoned immediately, documented below for completeness.
+The BigQuery queries that produced the raw data went through six iterations (v1–v5, then v6.1). The SQL files for all versions are in this folder. v1 was a dead end abandoned immediately, documented below for completeness.
 
-**v5 is the final query** — the one that produced `data/processed/ghost_repos_v5_final.csv`, the dataset used in the blog post and data explorer.
+**v6.1 is the final query** — the one that produced `data/processed/ghost_repos_v5_final.csv`, the dataset used in the blog post and data explorer. (The output file kept its v5 name from when the pipeline was first set up; the query that generated it is v6.1.)
+
+v5 was a direct precursor — same structure and thresholds, but limited to 2025 data and with slightly looser filters. v6.1 extended the date range, raised the activity bar, and added more noise patterns.
 
 The source data is the [`githubarchive`](https://www.gharchive.org/) public dataset in BigQuery. We queried roughly 5 TB of event data spanning all of 2025 and early 2026.
 
@@ -46,19 +48,35 @@ SQL: [`v04_soul_poured.sql`](v04_soul_poured.sql)
 
 ---
 
-## v5 — The final query: meaningful workflow thresholds + two-stage GitHub API check
+## v5 — Meaningful workflow thresholds + two-stage GitHub API check
 
 **What it did:**
 - Required 5+ issue events, 5+ PR events, and 20+ combined workflow events
 - Required at least 6 active months and 1–5 human pushers
+- Push events capped at 100–3500
 - Called the GitHub API for each candidate in two stages:
   - **Stage 1**: Basic validation (star count, fork status, language, whether it's archived)
   - **Stage 2**: Quality inspection (README presence and length, test files, CI config, release count, commit message diversity)
 - Filtered out known noise patterns: mirrors, backups, dotfiles, status pages, uptime monitors
 
-**Result:** `ghost_repos_v5_final.csv` — 401 repos, the dataset used in the blog post.
+**Limitation:** Date range was 2025 only. A few noise patterns (tutorial repos, templates, course assignments) still slipped through.
 
 SQL: [`v05_codeweaver_profile.sql`](v05_codeweaver_profile.sql)
+
+---
+
+## v6.1 — The final query: extended date range + tighter noise filters
+
+**What it did:**
+- **UNION ALL** across `githubarchive.month.2025*` and `githubarchive.month.2026*` to cover the full data window (BigQuery requires UNION ALL to query multiple wildcard table prefixes)
+- Raised `active_months` threshold from 6 to **8** — stricter consistency requirement
+- Widened `push_events` range to **150–5000** (catches active projects at the lower end that v5 missed)
+- Added noise filter patterns: `template`, `tutorial`, `learn-`, `awesome-`, `practice`, `course`, `assignment`, `homework`
+- Renamed output columns `stars_period` / `forks_period` to reflect the multi-year date range
+
+**Result:** This is the query that produced the 401-repo dataset — `ghost_repos_v5_final.csv`. The file kept its v5 name from when the pipeline was originally set up.
+
+SQL: [`v06.1_codeweaver_expansion.sql`](v06.1_codeweaver_expansion.sql)
 
 ---
 
@@ -82,10 +100,8 @@ The scoring pipeline in `scripts/main.py` already does this to some extent with 
 | File | Query version | Rows | Date range |
 |------|--------------|------|------------|
 | `bq-results-20260327-032336-1774582099303.csv` | Early v2/v3 run | 500 | 2025-01-01 to 2025-08-13 |
-| `bquxjob_6df66b77_19d449db63d.csv` | v5 input (small batch) | 99 | Full 2025 |
-| `bquxjob_412f814a_19d44cadf87.csv` | v5 extended date run | 999 | 2025-01-01 to 2026-03-30 |
-
-The 999-row file (`bquxjob_412f814a`) was produced by running the v5 query structure against an extended date range (through March 2026). It hasn't been fully scored through the Python pipeline yet — it's there for future runs.
+| `bquxjob_6df66b77_19d449db63d.csv` | v5 input | 99 | Full 2025 |
+| `bquxjob_412f814a_19d44cadf87.csv` | v6.1 input → scored into `ghost_repos_v5_final.csv` | 999 | 2025-01-01 to 2026-03-30 |
 
 ---
 
