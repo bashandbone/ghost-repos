@@ -1,0 +1,50 @@
+repo_name,push_events,total_commits,total_stars,ghost_score,language,description,created_at,distinct_pushers,active_months,is_fork,has_license,html_url,topics
+mad4j/pioveazagarolo,3382,2558,1,7088.3,JavaScript,Piove domani a Zagarolo?,2023-11-24,0,12,False,True,https://github.com/mad4j/pioveazagarolo,
+lubosm/minedusk-uptime,3163,7880,1,6629.3,Markdown,Monitorovanie dostupnosti webových stránok v rezorte školstva SR,2022-01-15,0,12,False,True,https://github.com/lubosm/minedusk-uptime,status-page; upptime; uptime-monitor
+ekenheim/home-ops-upgrade,2980,4128,1,6245.8,Go Template,,2023-12-25,0,12,False,True,https://github.com/ekenheim/home-ops-upgrade,
+sheldonreimers/umusa-plumbing,3475,2894,2,5771.9,Python,Repository for all work related to Umusa Plumbing,2024-02-20,0,12,False,False,https://github.com/sheldonreimers/umusa-plumbing,
+Left024/DrinkingData,3328,2713,2,5527.7,Python,个人饮水记录,2022-01-21,0,12,False,True,https://github.com/Left024/DrinkingData,
+steffensbola/new-domains-daily,3119,2659,2,5180.5,TypeScript,New websites created on a daily basis,2022-08-08,0,12,False,False,https://github.com/steffensbola/new-domains-daily,
+ModaOperandi/om,3036,7851,2,5042.7,TypeScript,Moda Operandi's design system expressed as React components.,2019-10-29,0,12,False,True,https://github.com/ModaOperandi/om,portal
+51sec/up,3012,11082,2,5002.8,JSON,"📈 Uptime monitor and status page for 51sec, powered by @upptime",2022-07-02,0,12,False,True,https://github.com/51sec/up,status-page; upptime; uptime-monitor
+qhy040404/github-stats,2950,2491,2,4899.8,Python,,2022-05-18,0,12,False,True,https://github.com/qhy040404/github-stats,
+macbre/faroese-planet,2898,2437,2,4813.5,Python,RSS feeds agregator aka planet for Faroese blogs from around the world,2020-10-19,0,12,False,True,https://github.com/macbre/faroese-planet,blogs; faroese
+MareMare/SpeedTestAnalysis,2818,2398,2,4680.6,Python,⚠️for personal use. This project analyzes internet speed test data and visualizes the results using Plotly.,2024-12-06,0,12,False,True,https://github.com/MareMare/SpeedTestAnalysis,plotly-python; python3
+fluttercandies/.github,2983,2531,3,4267.7,,,2021-10-27,0,12,False,False,https://github.com/fluttercandies/.github,
+DaSchTour/dasch-ng,3114,5175,4,4001.8,TypeScript,collection of reusable Angular libraries and TypeScript utilities for modern web development,2022-09-16,0,12,False,True,https://github.com/DaSchTour/dasch-ng,angular; rxjs; utils
+Dynesshely/EverydayNews,2999,5671,5,3548.7,HTML,"A repo fetched most of news and infomation, where stored and organized them.",2023-10-16,0,12,False,False,https://github.com/Dynesshely/EverydayNews,crawler; data; fetcher; network; news
+NodeBE4/hero,3432,2936,8,3432.0,HTML,纪念那些说真话的英雄,2020-08-28,0,12,False,True,https://github.com/NodeBE4/hero,
+FlorisFeddema/homelab,3400,6644,8,3400.0,Go Template,,2022-10-17,0,12,False,False,https://github.com/FlorisFeddema/homelab,hacktoberfest
+rolldown/metric,2843,4200,5,3364.1,JavaScript,,2024-06-24,0,12,False,False,https://github.com/rolldown/metric,
+terorero/monitor,3325,6232,0,3325.0,JSON,Monitor system,2022-02-05,0,12,False,True,https://github.com/terorero/monitor,status-page; upptime; uptime-monitor
+hykilpikonna/blog-data,2963,2492,6,3281.0,,Telegram Channel API Data,2022-12-20,0,12,False,False,https://github.com/hykilpikonna/blog-data,
+ctu-mrs/ppa-unstable,3263,2747,0,3263.0,Shell,Personal Package Archive (PPA) for unstable MRS deb packages. ,2023-07-17,0,12,False,True,https://github.com/ctu-mrs/ppa-unstable,
+avcga/uptime,3216,5157,0,3216.0,Markdown,Service Status Monitor,2020-12-28,0,12,False,True,https://github.com/avcga/uptime,status-page; upptime; uptime-monitor
+ammangdzaky/REBOISASI,3190,2738,0,3190.0,,hijau * ∞,2024-10-16,0,12,False,False,https://github.com/ammangdzaky/REBOISASI,
+polvere73/work,3166,2698,0,3166.0,HTML,,2024-12-31,0,12,False,False,https://github.com/polvere73/work,
+rustama1211/up,3133,4301,0,3133.0,Markdown,"📈 Uptime monitor and status page for rustama1211, powered by @upptime",2021-07-14,0,12,False,True,https://github.com/rustama1211/up,status-page; upptime; uptime-monitor
+badspacebar/release,2828,2375,6,3131.5,,,2023-06-03,0,12,False,False,https://github.com/badspacebar/release,
+7hanw1n/uptime,3115,4657,0,3115.0,Markdown,My Web Status,2024-10-25,0,12,False,True,https://github.com/7hanw1n/uptime,status-page; upptime; uptime-monitor
+irsadarief/uptime,3110,4816,0,3110.0,JSON,,2024-04-21,0,12,False,True,https://github.com/irsadarief/uptime,
+mozilla-l10n/www-l10n,3304,2915,10,3061.6,Fluent,Localization of www.mozilla.org (Fluent),2019-10-10,0,12,False,True,https://github.com/mozilla-l10n/www-l10n,
+vs-postmedia/tanker-tracker,3061,2461,0,3061.0,JavaScript,,2024-06-01,0,12,False,False,https://github.com/vs-postmedia/tanker-tracker,
+ingadhoc/uruguay,3011,1932,0,3011.0,Python,Odoo Uruguay Localization,2020-04-28,0,12,False,False,https://github.com/ingadhoc/uruguay,
+playt-net/uptime,3006,10463,0,3006.0,Markdown,Uptime monitoring for playt.net,2024-05-08,0,12,False,True,https://github.com/playt-net/uptime,
+qwandor/dancelist-data,3228,3661,10,2991.2,,Folk dance event information.,2022-01-30,0,12,False,False,https://github.com/qwandor/dancelist-data,dance; dancing; folk-dance; hacktoberfest; website
+Dealsafe/ds-uptime,2964,4103,0,2964.0,Markdown,"📈 Uptime monitor and status page for Dealsafee, powered by @upptime",2021-11-10,0,12,False,True,https://github.com/Dealsafe/ds-uptime,status-page; upptime; uptime-monitor
+mozmeao/www-l10n,2960,2651,0,2960.0,Fluent,Processed l10n files for bedrock instances,2019-09-12,0,12,False,True,https://github.com/mozmeao/www-l10n,
+HarmonyCandies/.github,2935,2491,0,2935.0,,Initial commit,2023-10-23,0,12,False,False,https://github.com/HarmonyCandies/.github,
+eldikra/monitoreo,2933,4496,0,2933.0,Markdown,"📈 Uptime monitor and status page for eldikra, powered by @upptime",2022-02-13,0,12,False,True,https://github.com/eldikra/monitoreo,status-page; upptime; uptime-monitor
+daddybannk/uptime,2911,2993,0,2911.0,JSON,"📈 Uptime monitor and status page for Sahachai Y., powered by @upptime",2023-07-07,0,12,False,True,https://github.com/daddybannk/uptime,status-page; upptime; uptime-monitor
+okitan/4sq-venue,2891,5117,0,2891.0,TypeScript,manage venues,2018-11-24,0,12,False,False,https://github.com/okitan/4sq-venue,
+GoruIV/Test,2888,2470,0,2888.0,C,,2023-11-03,0,12,False,False,https://github.com/GoruIV/Test,
+ghostnetrn/bot-tesouro-direto,3356,3266,13,2853.5,JavaScript,Dados dos preços e taxas do títulos do tesourodireto.com.br,2023-02-19,0,12,False,True,https://github.com/ghostnetrn/bot-tesouro-direto,bot; docker; financas; investimentos; telegram-bot; tesouro; tesouro-direto; tesourodireto; tesouroprefixado
+shindouj/uptime,2829,3039,0,2829.0,Markdown,Uptime for my public-facing services,2024-12-02,0,12,False,True,https://github.com/shindouj/uptime,
+amin-IT/kmhars,2820,4779,0,2820.0,Markdown,"📈 Uptime monitor and status page for amin-IT, powered by @upptime",2024-04-18,0,12,False,True,https://github.com/amin-IT/kmhars,status-page; upptime; uptime-monitor
+Boemeltrein/TalosCluster,3196,7562,12,2788.5,Shell,My Kubernetes HomeCluster,2024-11-24,0,12,False,False,https://github.com/Boemeltrein/TalosCluster,k8s-at-home; kubernetes-cluster; kubesearch; truecharts
+Project-Pandora-Game/pandora,3295,6760,14,2736.4,TypeScript,,2022-08-05,0,12,False,True,https://github.com/Project-Pandora-Game/pandora,
+jonahsnider/frc-colors.com,3118,5606,12,2720.5,TypeScript,A web app & API to get the team colors for an FRC team's logo.,2023-08-24,0,12,False,True,https://github.com/jonahsnider/frc-colors.com,api; frc; nextjs
+hibikidesu/KData,3134,2682,13,2664.8,,Auto updating repo,2022-06-21,0,12,False,False,https://github.com/hibikidesu/KData,
+Squidly271/AppFeed,2949,2464,11,2647.4,Io,,2018-09-30,0,12,False,False,https://github.com/Squidly271/AppFeed,
+guilhermewolf/atoca.house,2948,5665,13,2506.6,YAML,A mono repository for my home infrastructure and Kubernetes cluster which adheres to Infrastructure as Code (IaC) and GitOps practices where possible,2022-09-20,0,12,False,True,https://github.com/guilhermewolf/atoca.house,gitops; k8s-at-home; kubernetes; kubesearch; self-hosted
+ingadhoc/purchase,2958,1841,14,2456.6,Python,ADHOC Odoo purchase addons,2016-01-18,0,12,False,True,https://github.com/ingadhoc/purchase,

@@ -1,0 +1,7 @@
+[project]
+name = "ghost-repos"
+version = "0.1.0"
+description = "A data project answering the question -- where are the ghost repos?"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []

@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ghost Repos — High-effort, invisible open source</title>
+  <meta name="description" content="401 GitHub repositories with years of sustained high effort and almost no stars. Explore the data from the Ghost Repos blog post." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --surface2: #21262d;
+      --border:   #30363d;
+      --text:     #e6edf3;
+      --muted:    #8b949e;
+      --purple:   #a78bfa;
+      --blue:     #58a6ff;
+      --green:    #3fb950;
+      --yellow:   #d29922;
+      --red:      #f85149;
+      --teal:     #39c5cf;
+      --radius:   8px;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* HEADER */
+    .site-header {
+      background: linear-gradient(180deg, #080c12 0%, var(--bg) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 52px 20px 36px;
+      text-align: center;
+    }
+    .ghost-icon { font-size: 52px; display: block; margin-bottom: 14px; filter: drop-shadow(0 0 16px rgba(167,139,250,.4)); }
+    .site-header h1 {
+      font-size: clamp(30px, 6vw, 52px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      background: linear-gradient(135deg, #e6edf3 20%, var(--purple) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .site-header .tagline {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    .blog-link-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      background: rgba(167,139,250,.1);
+      border: 1px solid rgba(167,139,250,.3);
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 13px;
+      color: var(--purple);
+      text-decoration: none;
+      transition: background .15s, border-color .15s;
+    }
+    .blog-link-banner:hover { background: rgba(167,139,250,.18); border-color: var(--purple); text-decoration: none; }
+
+    /* STATS */
+    .stats-section {
+      max-width: 900px;
+      margin: 32px auto 0;
+      padding: 0 20px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .stat-card .val {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--purple);
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+    .stat-card .lbl {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .stat-card.accent-green .val  { color: var(--green); }
+    .stat-card.accent-blue .val   { color: var(--blue); }
+    .stat-card.accent-yellow .val { color: var(--yellow); }
+    .stat-card.accent-teal .val   { color: var(--teal); }
+
+    /* MAIN */
+    .main { max-width: 1280px; margin: 0 auto; padding: 40px 20px 72px; }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pill {
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2px 8px;
+      color: var(--muted);
+    }
+    .section-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    /* FEATURED / HERO */
+    .featured { margin-bottom: 48px; }
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .featured-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .15s, transform .12s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .featured-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--purple);
+      opacity: .7;
+    }
+    .featured-card.c-teal::before   { background: var(--teal); }
+    .featured-card.c-green::before  { background: var(--green); }
+    .featured-card.c-yellow::before { background: var(--yellow); }
+    .featured-card.c-blue::before   { background: var(--blue); }
+    .featured-card.c-red::before    { background: var(--red); }
+    .featured-card:hover { border-color: #58677a; transform: translateY(-2px); }
+    .featured-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      color: var(--purple);
+    }
+    .featured-card.c-teal   .featured-tag { color: var(--teal); }
+    .featured-card.c-green  .featured-tag { color: var(--green); }
+    .featured-card.c-yellow .featured-tag { color: var(--yellow); }
+    .featured-card.c-blue   .featured-tag { color: var(--blue); }
+    .featured-card.c-red    .featured-tag { color: var(--red); }
+    .featured-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .featured-name a { color: var(--text); }
+    .featured-name a:hover { color: var(--blue); text-decoration: none; }
+    .featured-name .org { font-weight: 400; color: var(--muted); }
+    .featured-desc {
+      font-size: 12px;
+      color: var(--muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.5;
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: auto; }
+    .chip {
+      font-size: 11px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .chip.hi { border-color: var(--purple); color: var(--purple); background: rgba(167,139,250,.08); }
+    .chip.green { border-color: var(--green); color: var(--green); background: rgba(63,185,80,.08); }
+    .chip.teal { border-color: var(--teal); color: var(--teal); background: rgba(57,197,207,.08); }
+
+    /* CONTROLS */
+    .controls {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .search-wrap { flex: 1 1 220px; position: relative; }
+    .search-wrap svg {
+      position: absolute; left: 9px; top: 50%;
+      transform: translateY(-50%); color: var(--muted); pointer-events: none;
+    }
+    .search-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); padding: 7px 10px 7px 30px;
+      font-size: 13px; outline: none; transition: border-color .15s;
+    }
+    .search-input:focus { border-color: var(--blue); }
+    .search-input::placeholder { color: var(--muted); }
+    select {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text); padding: 7px 26px 7px 10px; font-size: 13px;
+      outline: none; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center;
+      transition: border-color .15s;
+    }
+    select:focus { border-color: var(--blue); }
+    .controls-right { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+    .view-toggle { display: flex; gap: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
+    .view-btn {
+      background: none; border: none; border-radius: 4px; color: var(--muted);
+      cursor: pointer; padding: 4px 8px; font-size: 14px; transition: background .1s, color .1s; line-height: 1;
+    }
+    .view-btn.active { background: var(--surface2); color: var(--text); }
+    .results-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+    /* ACTIVE FILTERS */
+    .active-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; min-height: 24px; }
+    .filter-chip {
+      font-size: 11px; background: rgba(167,139,250,.1); border: 1px solid rgba(167,139,250,.25);
+      border-radius: 12px; padding: 2px 9px; color: var(--purple); cursor: pointer;
+      display: flex; align-items: center; gap: 4px; transition: background .1s;
+    }
+    .filter-chip:hover { background: rgba(167,139,250,.2); }
+
+    /* GRID VIEW */
+    #results.grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 12px;
+    }
+    #results.list-view {
+      display: flex; flex-direction: column; gap: 1px;
+      background: var(--border); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+
+    /* REPO CARD */
+    .repo-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 14px;
+      transition: border-color .15s, transform .1s;
+      display: flex; flex-direction: column; gap: 9px;
+    }
+    .repo-card.is-featured {
+      border-color: rgba(167,139,250,.35);
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(167,139,250,.04) 100%);
+    }
+    .repo-card:hover { border-color: #58677a; transform: translateY(-1px); }
+    .repo-card.is-featured:hover { border-color: rgba(167,139,250,.6); }
+
+    /* LIST VIEW */
+    .list-header {
+      background: var(--surface2); padding: 8px 14px;
+      display: grid; grid-template-columns: minmax(160px, 2.5fr) minmax(80px, 1fr) repeat(4, minmax(60px, 1fr)) minmax(70px, 1fr);
+      gap: 10px; font-size: 11px; color: var(--muted); font-weight: 600;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .list-header span { cursor: default; user-select: none; }
+    .repo-row {
+      background: var(--surface); padding: 10px 14px;
+      display: grid; grid-template-columns: minmax(160px, 2.5fr) minmax(80px, 1fr) repeat(4, minmax(60px, 1fr)) minmax(70px, 1fr);
+      gap: 10px; align-items: center; transition: background .1s;
+    }
+    .repo-row.is-featured { background: rgba(167,139,250,.04); }
+    .repo-row:hover, .repo-row.is-featured:hover { background: var(--surface2); }
+    .repo-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .repo-name a { color: var(--text); }
+    .repo-name a:hover { color: var(--blue); text-decoration: none; }
+    .repo-desc {
+      font-size: 12px; color: var(--muted);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .repo-desc.one-line { -webkit-line-clamp: 1; }
+    .lang-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .lang-name { font-size: 12px; color: var(--muted); }
+    .metric-val { font-size: 13px; }
+    .metric-lbl { font-size: 10px; color: var(--muted); display: block; }
+    .badge { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500; }
+    .badge.tests { background: rgba(63,185,80,.1); color: var(--green); border: 1px solid rgba(63,185,80,.2); }
+    .badge.ci    { background: rgba(88,166,255,.1); color: var(--blue);  border: 1px solid rgba(88,166,255,.2); }
+    .badge.solo  { background: rgba(167,139,250,.1);color: var(--purple);border: 1px solid rgba(167,139,250,.2); }
+    .badge.rel   { background: rgba(57,197,207,.1); color: var(--teal);  border: 1px solid rgba(57,197,207,.2); }
+    .badge.fp    { background: rgba(167,139,250,.15);color: var(--purple);border: 1px solid rgba(167,139,250,.4); font-size:9px; }
+    .score-val { font-size: 14px; font-weight: 700; color: var(--purple); }
+    .score-sub { font-size: 10px; color: var(--muted); }
+    .star-val { color: var(--yellow); font-size: 12px; }
+
+    /* EMPTY / LOADING */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .empty-state .ghost { font-size: 40px; display: block; margin-bottom: 12px; }
+    .loading { text-align: center; padding: 80px 20px; color: var(--muted); font-size: 15px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { display: inline-block; animation: spin 1s linear infinite; margin-right: 6px; }
+
+    /* PAGINATION */
+    .pagination { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+    .page-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); cursor: pointer; padding: 5px 12px;
+      font-size: 13px; transition: background .1s, border-color .1s;
+    }
+    .page-btn:hover:not(:disabled) { background: var(--surface2); border-color: #58677a; }
+    .page-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .page-btn.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .page-info { font-size: 12px; color: var(--muted); }
+
+    /* FOOTER */
+    .site-footer {
+      border-top: 1px solid var(--border); padding: 24px 20px;
+      text-align: center; font-size: 12px; color: var(--muted);
+    }
+    .site-footer a { color: var(--muted); }
+    .site-footer a:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      .list-header, .repo-row { grid-template-columns: 1fr auto; }
+      .list-header .hide-sm, .repo-row .hide-sm { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="ghost-icon">👻</span>
+  <h1>Ghost Repos</h1>
+  <p class="tagline">
+    GitHub repositories with years of sustained effort, thousands of commits, and almost no stars.
+    These are the most dedicated invisible projects on the internet.
+  </p>
+  <a class="blog-link-banner" href="https://github.com/bashandbone/ghost-repos" target="_blank" rel="noopener">
+    ← Read the full story on the blog
+  </a>
+</header>
+
+<div class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="val">401</div>
+      <div class="lbl">Ghost repos</div>
+    </div>
+    <div class="stat-card accent-teal">
+      <div class="val">578k</div>
+      <div class="lbl">Combined commits</div>
+    </div>
+    <div class="stat-card accent-yellow">
+      <div class="val">116×</div>
+      <div class="lbl">Commits per star</div>
+    </div>
+    <div class="stat-card accent-green">
+      <div class="val">3.7y</div>
+      <div class="lbl">Avg repo age</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">52</div>
+      <div class="lbl">With zero stars</div>
+    </div>
+    <div class="stat-card accent-blue">
+      <div class="val">96%</div>
+      <div class="lbl">Have CI/CD</div>
+    </div>
+    <div class="stat-card accent-green">
+      <div class="val">44%</div>
+      <div class="lbl">Have tests</div>
+    </div>
+    <div class="stat-card">
+      <div class="val">5,001</div>
+      <div class="lbl">Combined stars</div>
+    </div>
+  </div>
+</div>
+
+<main class="main">
+
+  <!-- FEATURED FROM THE BLOG POST -->
+  <section class="featured">
+    <h2 class="section-title">Featured in the post <span class="pill">12 repos</span></h2>
+    <p class="section-note">
+      These repos were highlighted in the blog post. They each tell a different story about what sustained invisible effort looks like.
+    </p>
+    <div class="featured-grid" id="featured-grid">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <!-- FULL EXPLORER -->
+  <section>
+    <h2 class="section-title">
+      Browse all 401 repos
+      <span class="pill" id="filtered-count-pill">401</span>
+    </h2>
+
+    <div class="controls">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input class="search-input" type="search" id="search" placeholder="Search name, description, language…" />
+      </div>
+
+      <select id="filter-lang">
+        <option value="">All languages</option>
+      </select>
+
+      <select id="filter-stars">
+        <option value="">Any stars</option>
+        <option value="0">0 stars</option>
+        <option value="1-5">1–5 stars</option>
+        <option value="6-20">6–20 stars</option>
+        <option value="21-50">21–50 stars</option>
+      </select>
+
+      <select id="filter-team">
+        <option value="">Any team size</option>
+        <option value="1">Solo (1 dev)</option>
+        <option value="2-3">Small team (2–3)</option>
+        <option value="4+">Larger team (4+)</option>
+      </select>
+
+      <select id="filter-quality">
+        <option value="">Any quality</option>
+        <option value="tests">Has tests</option>
+        <option value="ci">Has CI</option>
+        <option value="both">Tests + CI</option>
+      </select>
+
+      <select id="sort-by">
+        <option value="c_score">Sort: Combined score</option>
+        <option value="g_score">Sort: Ghost score</option>
+        <option value="q_score">Sort: Quality score</option>
+        <option value="cps">Sort: Commits per star</option>
+        <option value="months">Sort: Active months</option>
+        <option value="commits">Sort: Total commits</option>
+        <option value="age_days">Sort: Repo age</option>
+        <option value="stars_asc">Sort: Stars (fewest first)</option>
+      </select>
+
+      <div class="controls-right">
+        <span class="results-count" id="results-count"></span>
+        <div class="view-toggle">
+          <button class="view-btn active" id="view-grid" title="Grid view">⊞</button>
+          <button class="view-btn" id="view-list" title="List view">☰</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="active-filters" id="active-filters"></div>
+
+    <div id="results" class="grid-view">
+      <div class="loading"><span class="spin">⟳</span> Loading…</div>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  Data collected March–April 2026 &nbsp;·&nbsp;
+  <a href="https://github.com/bashandbone/ghost-repos" target="_blank" rel="noopener">bashandbone/ghost-repos</a> &nbsp;·&nbsp;
+  Source: <a href="https://www.gharchive.org/" target="_blank" rel="noopener">GitHub Archive</a> via BigQuery &nbsp;·&nbsp;
+  MIT License
+</footer>
+
+<script>
+// ── Language colours (GitHub palette subset)
+const LANG_COLORS = {
+  TypeScript:'#3178c6', JavaScript:'#f1e05a', Python:'#3572A5', Java:'#b07219',
+  Go:'#00ADD8', Rust:'#dea584', 'C#':'#178600', 'C++':'#f34b7d', C:'#555555',
+  Ruby:'#701516', PHP:'#4F5D95', Kotlin:'#A97BFF', Swift:'#F05138', Scala:'#c22d40',
+  PowerShell:'#012456', Shell:'#89e051', Julia:'#a270ba', HTML:'#e34c26',
+  CSS:'#563d7c', Dart:'#00B4AB', Elixir:'#6e4a7e', Haskell:'#5e5086',
+  R:'#198CE7', Lua:'#000080', Clojure:'#db5855', Unknown:'#8b949e',
+};
+const langColor = l => LANG_COLORS[l] || '#8b949e';
+
+// ── Hero repos from the blog post, in order of appearance with their story label
+const HERO_REPOS = [
+  { name: 'tomwillis608/thicker-stl',               label: 'Warhammer engineer',         color: '' },
+  { name: 'mP1/walkingkooka-spreadsheet-dominokit',  label: 'Spreadsheet from scratch',   color: 'c-teal' },
+  { name: 'orange-buffalo/simple-accounting',        label: '7-year accounting app',       color: 'c-green' },
+  { name: 'rossaddison/invoice',                     label: 'Open-source invoicing',       color: 'c-yellow' },
+  { name: 'hextriclosan/rusty-jvm',                  label: 'JVM written in Rust',         color: 'c-blue' },
+  { name: 'OpenAF/openaf',                           label: '9-year DevOps tool',          color: '' },
+  { name: 'srtab/daiv',                              label: 'AI SWE teammate',             color: 'c-teal' },
+  { name: 'tkemmer/NESSie.jl',                       label: '8-year Julia library',        color: 'c-green' },
+  { name: 'mthmulders/traqqr',                       label: 'EV energy tracker',           color: 'c-yellow' },
+  { name: 'Japan7/karaberus',                        label: 'Karaoke file manager',        color: 'c-blue' },
+  { name: 'mimmi20/browser-detector',                label: '12-year PHP library',         color: 'c-red' },
+  { name: 'marvin-j97/lemna',                        label: '5-year serverless tool',      color: '' },
+];
+const HERO_SET = new Set(HERO_REPOS.map(h => h.name));
+
+function fmt(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000)    return (n/1000).toFixed(1)+'k';
+  return String(n);
+}
+function ageStr(days) {
+  if (!days) return '—';
+  const y = days/365;
+  return y >= 1 ? (Math.round(y*10)/10)+'y' : Math.round(days/30)+'mo';
+}
+
+// ── State
+let allData = [], filtered = [];
+let currentPage = 1;
+const PER_PAGE = 30;
+let viewMode = 'grid';
+
+// ── DOM
+const searchEl   = document.getElementById('search');
+const fLang      = document.getElementById('filter-lang');
+const fStars     = document.getElementById('filter-stars');
+const fTeam      = document.getElementById('filter-team');
+const fQual      = document.getElementById('filter-quality');
+const sortEl     = document.getElementById('sort-by');
+const resultsEl  = document.getElementById('results');
+const paginEl    = document.getElementById('pagination');
+const countEl    = document.getElementById('results-count');
+const pillEl     = document.getElementById('filtered-count-pill');
+const filtersEl  = document.getElementById('active-filters');
+
+// ── Load
+fetch('./data/ghost_repos.json')
+  .then(r => r.json())
+  .then(data => {
+    // Add computed commits-per-star
+    allData = data.map(r => ({
+      ...r,
+      cps: r.stars > 0 ? Math.round(r.commits / r.stars) : r.commits
+    }));
+    init();
+  })
+  .catch(() => {
+    resultsEl.innerHTML = '<div class="empty-state"><span class="ghost">👻</span>Could not load data. Open this file through a local server or GitHub Pages.</div>';
+  });
+
+function init() {
+  buildLangFilter();
+  renderFeatured();
+  applyFilters();
+
+  [searchEl, fLang, fStars, fTeam, fQual, sortEl].forEach(el =>
+    el.addEventListener(el.tagName === 'INPUT' ? 'input' : 'change', () => { currentPage = 1; applyFilters(); })
+  );
+  document.getElementById('view-grid').addEventListener('click', () => setView('grid'));
+  document.getElementById('view-list').addEventListener('click', () => setView('list'));
+}
+
+function buildLangFilter() {
+  const counts = {};
+  allData.forEach(r => counts[r.lang] = (counts[r.lang]||0)+1);
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).filter(([,c])=>c>=3).forEach(([l,c]) => {
+    const o = document.createElement('option');
+    o.value = l; o.textContent = `${l} (${c})`;
+    fLang.appendChild(o);
+  });
+}
+
+function renderFeatured() {
+  const byName = Object.fromEntries(allData.map(r => [r.repo, r]));
+  const grid = document.getElementById('featured-grid');
+
+  grid.innerHTML = HERO_REPOS.map(({name, label, color}) => {
+    const r = byName[name];
+    if (!r) return '';
+    const shortName = name.split('/')[1];
+    const org = name.split('/')[0];
+    const years = r.age_days ? (r.age_days/365).toFixed(1)+'y old' : '';
+    return `
+    <div class="featured-card ${color}">
+      <div class="featured-tag">${label}</div>
+      <div class="featured-name">
+        <span class="org">${org}/</span><a href="${r.url}" target="_blank" rel="noopener">${shortName}</a>
+      </div>
+      <div class="featured-desc">${r.desc || '<em>No description</em>'}</div>
+      <div class="chip-row">
+        <span class="chip hi">★ ${r.stars}</span>
+        <span class="chip hi">${fmt(r.commits)} commits</span>
+        ${years ? `<span class="chip">${years}</span>` : ''}
+        ${r.lang !== 'Unknown' ? `<span class="chip">${r.lang}</span>` : ''}
+        ${r.tests ? '<span class="chip green">tests ✓</span>' : ''}
+        ${r.ci    ? '<span class="chip teal">CI ✓</span>'    : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function applyFilters() {
+  const q     = searchEl.value.toLowerCase().trim();
+  const lang  = fLang.value;
+  const stars = fStars.value;
+  const team  = fTeam.value;
+  const qual  = fQual.value;
+  const sort  = sortEl.value;
+
+  filtered = allData.filter(r => {
+    if (q && !r.repo.toLowerCase().includes(q) &&
+             !(r.desc||'').toLowerCase().includes(q) &&
+             !r.lang.toLowerCase().includes(q)) return false;
+    if (lang && r.lang !== lang) return false;
+    if (stars === '0'     && r.stars !== 0)              return false;
+    if (stars === '1-5'   && (r.stars < 1||r.stars > 5)) return false;
+    if (stars === '6-20'  && (r.stars < 6||r.stars >20)) return false;
+    if (stars === '21-50' && (r.stars <21||r.stars >50)) return false;
+    if (team === '1'   && r.pushers !== 1)               return false;
+    if (team === '2-3' && (r.pushers<2||r.pushers>3))    return false;
+    if (team === '4+'  && r.pushers < 4)                 return false;
+    if (qual === 'tests' && !r.tests) return false;
+    if (qual === 'ci'    && !r.ci)    return false;
+    if (qual === 'both'  && (!r.tests||!r.ci)) return false;
+    return true;
+  });
+
+  if (sort === 'stars_asc') {
+    filtered.sort((a,b) => a.stars - b.stars);
+  } else {
+    filtered.sort((a,b) => (b[sort]||0) - (a[sort]||0));
+  }
+
+  pillEl.textContent   = filtered.length;
+  countEl.textContent  = `${filtered.length} result${filtered.length!==1?'s':''}`;
+
+  renderActiveFilters();
+  renderPage();
+  renderPagination();
+}
+
+function renderActiveFilters() {
+  const chips = [];
+  if (searchEl.value) chips.push({ label: `"${searchEl.value}"`, id: 'search' });
+  if (fLang.value)  chips.push({ label: fLang.value, id: 'lang' });
+  if (fStars.value) chips.push({ label: `Stars: ${fStars.value}`, id: 'stars' });
+  if (fTeam.value)  chips.push({ label: fTeam.options[fTeam.selectedIndex].text, id: 'team' });
+  if (fQual.value)  chips.push({ label: fQual.options[fQual.selectedIndex].text, id: 'qual' });
+  filtersEl.innerHTML = chips.map(c =>
+    `<button class="filter-chip" onclick="clearFilter('${c.id}')">✕ ${c.label}</button>`
+  ).join('');
+}
+
+function clearFilter(id) {
+  const map = { search: searchEl, lang: fLang, stars: fStars, team: fTeam, qual: fQual };
+  map[id].value = '';
+  currentPage = 1;
+  applyFilters();
+}
+
+function renderPage() {
+  const start = (currentPage-1)*PER_PAGE;
+  const page  = filtered.slice(start, start+PER_PAGE);
+
+  if (!page.length) {
+    resultsEl.className = '';
+    resultsEl.innerHTML = `<div class="empty-state"><span class="ghost">👻</span>No repos match these filters.</div>`;
+    return;
+  }
+
+  resultsEl.className = viewMode === 'grid' ? 'grid-view' : 'list-view';
+
+  if (viewMode === 'list') {
+    resultsEl.innerHTML =
+      `<div class="list-header">
+        <span>Repository</span>
+        <span class="hide-sm">Language</span>
+        <span class="hide-sm">Commits</span>
+        <span class="hide-sm">Age</span>
+        <span class="hide-sm">Commits/★</span>
+        <span class="hide-sm">Stars</span>
+        <span>Score</span>
+      </div>` +
+      page.map(r => renderRow(r)).join('');
+  } else {
+    resultsEl.innerHTML = page.map(r => renderCard(r)).join('');
+  }
+}
+
+function renderCard(r) {
+  const isFP = HERO_SET.has(r.repo);
+  const shortName = r.repo.split('/')[1] || r.repo;
+  const org       = r.repo.split('/')[0];
+  return `
+  <div class="repo-card${isFP?' is-featured':''}">
+    <div>
+      ${isFP ? '<span class="badge fp" style="margin-bottom:4px;display:inline-block">From the post</span>' : ''}
+      <div class="repo-name"><a href="${r.url}" target="_blank" rel="noopener">${shortName}</a></div>
+      <div style="font-size:11px;color:var(--muted)">${org}</div>
+    </div>
+    <div class="repo-desc">${r.desc||'<em style="color:var(--muted)">No description</em>'}</div>
+    <div style="display:flex;align-items:center;gap:6px">
+      ${r.lang!=='Unknown'?`<span class="lang-dot" style="background:${langColor(r.lang)}"></span><span class="lang-name">${r.lang}</span>`:''}
+      <span class="star-val" style="margin-left:auto">★ ${r.stars}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-top:8px;border-top:1px solid var(--border)">
+      <div><span class="metric-lbl">commits</span><span class="metric-val">${fmt(r.commits)}</span></div>
+      <div><span class="metric-lbl">age</span><span class="metric-val">${ageStr(r.age_days)}</span></div>
+      <div><span class="metric-lbl">active</span><span class="metric-val">${r.months}mo</span></div>
+      <div><span class="metric-lbl">per ★</span><span class="metric-val">${r.stars>0?fmt(r.cps):'∞'}</span></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        ${r.tests?'<span class="badge tests">tests</span>':''}
+        ${r.ci   ?'<span class="badge ci">CI</span>'   :''}
+        ${r.pushers===1?'<span class="badge solo">solo</span>':''}
+        ${r.releases>0 ?`<span class="badge rel">${r.releases} rel</span>`:''}
+      </div>
+      <div style="text-align:right">
+        <div class="score-val">${Math.round(r.c_score)}</div>
+        <div class="score-sub">score</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderRow(r) {
+  const isFP = HERO_SET.has(r.repo);
+  const shortName = r.repo.split('/')[1] || r.repo;
+  return `
+  <div class="repo-row${isFP?' is-featured':''}">
+    <div>
+      <div class="repo-name">
+        ${isFP?'<span style="color:var(--purple);font-size:10px;margin-right:4px">★</span>':''}
+        <a href="${r.url}" target="_blank" rel="noopener">${shortName}</a>
+      </div>
+      <div class="repo-desc one-line" style="margin-top:1px">${r.desc||''}</div>
+    </div>
+    <div class="hide-sm" style="display:flex;align-items:center;gap:5px">
+      ${r.lang!=='Unknown'?`<span class="lang-dot" style="background:${langColor(r.lang)}"></span><span class="lang-name">${r.lang}</span>`:'<span class="lang-name">—</span>'}
+    </div>
+    <div class="hide-sm"><span class="metric-val">${fmt(r.commits)}</span></div>
+    <div class="hide-sm"><span class="metric-val">${ageStr(r.age_days)}</span></div>
+    <div class="hide-sm"><span class="metric-val">${r.stars>0?fmt(r.cps):'∞'}</span></div>
+    <div class="hide-sm star-val">★ ${r.stars}</div>
+    <div style="text-align:right"><span class="score-val">${Math.round(r.c_score)}</span></div>
+  </div>`;
+}
+
+function renderPagination() {
+  const total = Math.ceil(filtered.length/PER_PAGE);
+  if (total <= 1) { paginEl.innerHTML = ''; return; }
+  const pages = [];
+  for (let i=1; i<=total; i++) {
+    if (i===1||i===total||(i>=currentPage-2&&i<=currentPage+2)) pages.push(i);
+    else if (pages[pages.length-1]!=='…') pages.push('…');
+  }
+  paginEl.innerHTML =
+    `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>← Prev</button>` +
+    pages.map(p => p==='…'
+      ? `<span class="page-info">…</span>`
+      : `<button class="page-btn${p===currentPage?' active':''}" onclick="goPage(${p})">${p}</button>`
+    ).join('') +
+    `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}>Next →</button>` +
+    `<span class="page-info">Page ${currentPage} of ${total}</span>`;
+}
+
+function goPage(n) {
+  const total = Math.ceil(filtered.length/PER_PAGE);
+  if (n<1||n>total) return;
+  currentPage = n;
+  renderPage(); renderPagination();
+  document.querySelector('.main section:last-of-type').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function setView(mode) {
+  viewMode = mode;
+  document.getElementById('view-grid').classList.toggle('active', mode==='grid');
+  document.getElementById('view-list').classList.toggle('active', mode==='list');
+  renderPage();
+}
+</script>
+</body>
+</html>
