@@ -1,0 +1,26 @@
+-- =============================================================================
+-- Ghost Repos v1: First attempt — commit count from push events
+-- =============================================================================
+-- What we tried: Sum the 'size' field from PushEvents to get total commit counts.
+-- The 'size' field represents how many commits are in each push.
+--
+-- Why it failed: This number is completely unreliable.
+-- When someone clones or forks a repo, GH Archive records a "push" event that
+-- includes the ENTIRE commit history. A single import can show up as 100,000+
+-- "commits." The top results were repos with millions of fake commits, all from
+-- one-time clone events.
+--
+-- This query was not saved — the approach was immediately abandoned.
+-- See v02_push_events.sql for the fix.
+-- =============================================================================
+--
+-- Conceptual shape (not executable as written):
+--
+-- SELECT
+--   repo.name,
+--   SUM(CAST(JSON_EXTRACT_SCALAR(payload, '$.size') AS INT64)) AS total_commits
+-- FROM `githubarchive.month.2025*`
+-- WHERE type = 'PushEvent'
+-- GROUP BY repo.name
+-- ORDER BY total_commits DESC
+-- LIMIT 500;
