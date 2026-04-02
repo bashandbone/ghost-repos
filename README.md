@@ -2,7 +2,7 @@
 
 Some open source projects have years of steady work behind them — hundreds or thousands of commits, real features, shipped code. But almost nobody knows they exist.
 
-We call them ghost repos.
+**I call them ghost repos.**
 
 This repo is the companion to the blog post [**Ghost Repos: The Most Dedicated Projects Nobody's Ever Heard Of**](https://blog.knitli.com/ghost-repos-the-most-dedicated-projects-nobodys-ever-heard-of). It contains the data, the scoring pipeline, and a browser-based explorer.
 
@@ -12,11 +12,12 @@ This repo is the companion to the blog post [**Ghost Repos: The Most Dedicated P
 
 ## What is a ghost repo?
 
-A ghost repo is a GitHub repository where someone (or a very small team) has put in serious, sustained effort over a long time — but the project has almost no stars, forks, or public recognition.
+**A ghost repo is** a GitHub repository **where someone (or a very small team) has put in serious, sustained effort over a long time — but the project has almost no stars, forks, or public recognition.**
 
 These aren't abandoned side projects. They're repos with:
 
 - **8+ months of active development** (many are years long, some more than a decade)
+- All of this dataset are repos with recent or ongoing activity
 - **Hundreds or thousands of commits**
 - **Real code quality signals** — tests, CI/CD pipelines, proper READMEs, releases
 - **Fewer than 50 stars**
@@ -85,11 +86,14 @@ ghost-repos/
 
 ## How to re-run the pipeline
 
-If you want to update the dataset (the pipeline is designed to be re-run monthly):
+If you want to update the dataset, you can run the BigQuery query yourself.
 
 ### 1. Get fresh BigQuery data
 
-Run the v6 query (see [`queries/README.md`](queries/README.md)) against the `githubarchive` public dataset in BigQuery. Export the results as a CSV into `data/raw/`.
+>[!WARNING]
+> **This query costs about 25 USD per run**. I was used Google Cloud's new customer credit ($300 for 15 days) to run the queries for free -- I couldn't have afforded it otherwise. Total cost for my iterations was ~100 USD (in credits). It's reasonable for scraping and processing 5TB of data, if you can afford it.
+
+Run the v6 query (see [`queries/README.md`](queries/README.md)) against the `githubarchive` public dataset in BigQuery (you don't need to do anything other than past the query in and click `run`). Export the results as a CSV into `data/raw/`.
 
 ### 2. Set up the environment
 
@@ -111,7 +115,7 @@ python scripts/main.py
 
 The script reads from `data/raw/`, hits the GitHub API to verify each repo, filters out noise (bots, mirrors, archived repos, etc.), and writes a new scored CSV to `data/processed/`.
 
-You'll need a GitHub personal access token for API rate limits:
+You'll need a GitHub personal access token for API rate limits, which you will hit very quickly:
 ```bash
 export GITHUB_TOKEN=your_token_here
 ```
@@ -132,6 +136,8 @@ json.dump(rows, open('docs/data/ghost_repos.json', 'w'), separators=(',', ':'))
 print(f'Done: {len(rows)} repos')
 "
 ```
+
+**(and submit a PR -- I would love to get fresh data :) )
 
 ---
 
@@ -154,4 +160,4 @@ GitHub Archive data is subject to its own terms. Repository metadata from the Gi
 
 ---
 
-Built by [bashandbone](https://github.com/bashandbone) with help from Claude.
+Built by [bashandbone](https://github.com/bashandbone) with help from Claude. Why? I wondered how many projects like [CodeWeaver](https://github.com/knitli/codeweaver) were out there and how much more extreme they might be. Results exceeded expectations.
