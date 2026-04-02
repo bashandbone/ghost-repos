@@ -4,7 +4,7 @@ Some open source projects have years of steady work behind them — hundreds or 
 
 We call them ghost repos.
 
-This repo is the companion to the blog post [**Ghost Repos: The Most Dedicated Projects Nobody's Ever Heard Of**](https://bashandbone.github.io). It contains the data, the scoring pipeline, and a browser-based explorer.
+This repo is the companion to the blog post [**Ghost Repos: The Most Dedicated Projects Nobody's Ever Heard Of**](https://blog.knitli.com/ghost-repos-the-most-dedicated-projects-nobodys-ever-heard-of). It contains the data, the scoring pipeline, and a browser-based explorer.
 
 **[Explore the data →](https://bashandbone.github.io/ghost-repos/)**
 
