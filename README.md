@@ -44,7 +44,7 @@ The question behind this project: *what would you find if you sorted GitHub by e
 
 ## How we found them
 
-We queried the [GitHub Archive](https://www.gharchive.org/) — a public record of all GitHub events — using BigQuery. The query went through **six iterations** to filter out noise and surface genuinely high-effort projects.
+We queried the [GitHub Archive](https://www.gharchive.org/) — a public record of all GitHub events — using BigQuery. The query went through **five iterations** to filter out noise and surface genuinely high-effort projects.
 
 See [`queries/README.md`](queries/README.md) for a full description of each iteration and what we learned.
 
@@ -58,13 +58,13 @@ ghost-repos/
 │   ├── raw/          # Raw BigQuery export CSVs (different query runs)
 │   └── processed/    # Scored and filtered results
 │       └── ghost_repos_v5_final.csv   ← main dataset (401 repos, 33 columns)
+├── docs/
+│   └── index.html    # Browser-based data explorer (served via GitHub Pages)
 ├── queries/
-│   └── README.md     # Six SQL iterations with descriptions
+│   └── README.md     # Five SQL iterations with descriptions
 ├── scripts/
 │   ├── main.py       # v5 scoring pipeline (two-stage GitHub API verification)
 │   └── githubtest.py # v2 scoring pipeline (earlier, simpler version)
-├── site/
-│   └── index.html    # Browser-based data explorer (no install needed)
 └── README.md
 ```
 
@@ -128,7 +128,7 @@ with open('data/processed/ghost_repos_v5_final.csv') as f:
     for row in csv.DictReader(f):
         rows.append({k: v for k, v in row.items()})
 rows.sort(key=lambda r: float(r.get('combined_score') or 0), reverse=True)
-json.dump(rows, open('site/data/ghost_repos.json', 'w'), separators=(',', ':'))
+json.dump(rows, open('docs/data/ghost_repos.json', 'w'), separators=(',', ':'))
 print(f'Done: {len(rows)} repos')
 "
 ```
