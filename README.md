@@ -6,6 +6,7 @@
   <img alt="CodeWeaver logo" src="docs/assets/ghost-repo-dark-text.svg" height="210px" width="400px">
 </picture>
 
+</div>
 Some open source projects have years of steady work behind them -- hundreds or thousands of commits. Real features. Shipped code. 
 
 But almost nobody knows they exist.
