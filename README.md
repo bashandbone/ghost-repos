@@ -59,11 +59,11 @@ You read that right: 401 repos, over half a million commits, 5,000 stars.
 
 ## How I found them
 
-I queried the [GitHub Archive](https://www.gharchive.org/) using Google Cloud BigQuery ([repo](https://github.com/igrigorik/gharchive.org). The GitHub Archive provides a public dataset of all GitHub events since February 2011, available on BigQuery or as raw json from gharchive.org. 
+I queried the [GitHub Archive](https://www.gharchive.org/) using Google Cloud BigQuery. The GitHub Archive provides a public dataset of all GitHub events since February 2011, available on BigQuery or as raw json from gharchive.org ([repo](https://github.com/igrigorik/gharchive.org)). 
 
 #### The query went through **six iterations** (v1–v5, then v6.1) to filter out noise and surface genuinely high-effort projects. 
 
-v6.1 is the final version — it extended the date range to cover 2025 and early 2026, raised the activity threshold to 8+ active months, and added more noise filter patterns, focusing on repo quality signals like pull requests.
+[v6.1 is the final version](queries/latest.sql) — it extended the date range to cover 2025 and early 2026, raised the activity threshold to 8+ active months, and added more noise filter patterns, focusing on repo quality signals like pull requests. 
 
 See [`queries/README.md`](queries/README.md) for a full description of each iteration and what I learned.
 
@@ -168,7 +168,7 @@ python scripts/main.py
 
 The script reads from `data/raw/`, hits the GitHub API to verify each repo, filters out noise (bots, mirrors, archived repos, etc.), and writes a new scored CSV to `data/processed/`.
 
-You'll need a GitHub personal access token for API rate limits, which you will hit very quickly:
+You'll need a GitHub personal access token for API rate limits, which you will hit very quickly. See [GitHub docs](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) for information on getting a token.
 
 ```bash
 export GITHUB_TOKEN=your_token_here
@@ -210,10 +210,10 @@ Both scripts take a CSV of BigQuery results, call the GitHub API for each repo, 
 
 ## License
 
-Data and code in this repository are released under the [MIT License](LICENSE).
+Data and code in this repository are released under the [Plain MIT License](LICENSE).
 
 GitHub Archive data is subject to its own terms (code under MIT license, website CC-by-4.0). Repository metadata from the GitHub API belongs to the respective repository owners.
 
 ---
 
-Built by [bashandbone](https://github.com/bashandbone) with help from Claude. Why? I wondered how many projects like [CodeWeaver](https://github.com/knitli/codeweaver) were out there and how much more extreme they might be. Results exceeded expectations.
+Built by [bashandbone](https://github.com/bashandbone) with help from Claude. Why? I wondered how many projects like [CodeWeaver](https://github.com/knitli/codeweaver) were out there and how much more extreme they might be. Results exceeded my expectations.
