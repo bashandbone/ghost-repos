@@ -1,6 +1,14 @@
-# Ghost Repos
+<div align="center">
 
-Some open source projects have years of steady work behind them — hundreds or thousands of commits, real features, shipped code. But almost nobody knows they exist.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/ghostrepo-dark-text.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/ghostrepo-light-text.svg">
+  <img alt="CodeWeaver logo" src="docs/assets/ghost-repo-dark-text.svg" height="210px" width="400px">
+</picture>
+
+Some open source projects have years of steady work behind them -- hundreds or thousands of commits. Real features. Shipped code. 
+
+But almost nobody knows they exist.
 
 **I call them ghost repos.**
 
@@ -14,15 +22,17 @@ This repo is the companion to the blog post [**Ghost Repos: The Most Dedicated P
 
 **A ghost repo is** a GitHub repository **where someone (or a very small team) has put in serious, sustained effort over a long time — but the project has almost no stars, forks, or public recognition.**
 
-These aren't abandoned side projects. They're repos with:
+These aren't abandoned side projects. The repos identified by `ghost-repos` have *at least*:
 
 - **8+ months of active development** (many are years long, some more than a decade)
-- All of this dataset are repos with recent or ongoing activity
+- **Recent or ongoing activity**
 - **Hundreds or thousands of commits**
 - **Real code quality signals** — tests, CI/CD pipelines, proper READMEs, releases
 - **Fewer than 50 stars**
 
-The question behind this project: *what would you find if you sorted GitHub by effort instead of popularity?*
+The question behind this project: *what would you find if you sorted GitHub by effort instead of popularity?*[^1]
+
+[^1]: More precisely: *what are the highest effort, least recognized, projects on GitHub?*
 
 ---
 
@@ -43,11 +53,11 @@ The question behind this project: *what would you find if you sorted GitHub by e
 
 ---
 
-## How we found them
+## How I found them
 
-We queried the [GitHub Archive](https://www.gharchive.org/) — a public record of all GitHub events — using BigQuery. The query went through **six iterations** (v1–v5, then v6.1) to filter out noise and surface genuinely high-effort projects. v6.1 is the final version — it extended the date range to cover 2025 and early 2026, raised the activity threshold to 8+ active months, and added more noise filter patterns.
+I queried the [GitHub Archive](https://www.gharchive.org/) — a public record of all GitHub events — using Google Cloud BigQuery. The query went through **six iterations** (v1–v5, then v6.1) to filter out noise and surface genuinely high-effort projects. v6.1 is the final version — it extended the date range to cover 2025 and early 2026, raised the activity threshold to 8+ active months, and added more noise filter patterns.
 
-See [`queries/README.md`](queries/README.md) for a full description of each iteration and what we learned.
+See [`queries/README.md`](queries/README.md) for a full description of each iteration and what I learned.
 
 ---
 
@@ -91,14 +101,14 @@ If you want to update the dataset, you can run the BigQuery query yourself.
 ### 1. Get fresh BigQuery data
 
 >[!WARNING]
-> **This query costs about 25 USD per run**. I was used Google Cloud's new customer credit ($300 for 15 days) to run the queries for free -- I couldn't have afforded it otherwise. Total cost for my iterations was ~100 USD (in credits). It's reasonable for scraping and processing 5TB of data, if you can afford it.
+> **Running the query costs about 25 USD**. I used Google Cloud's new customer credit ($300 for 15 days) to run the queries for free -- I couldn't have afforded it otherwise. Total cost for my iterations was ~100 USD (in credits). It's reasonable for scraping and processing 5TB of data, if you can afford it.
 
-Run the v6 query (see [`queries/README.md`](queries/README.md)) against the `githubarchive` public dataset in BigQuery (you don't need to do anything other than past the query in and click `run`). Export the results as a CSV into `data/raw/`.
+Run the v6 query (see [`queries/README.md`](queries/README.md)) against the `githubarchive` public dataset in BigQuery (you don't need to do anything other than paste the query and click `run`). Export the results as a CSV into `data/raw/`.
 
 ### 2. Set up the environment
 
 ```bash
-# Uses uv (fast Python package manager)
+# Uses uv
 uv sync
 ```
 
@@ -116,6 +126,7 @@ python scripts/main.py
 The script reads from `data/raw/`, hits the GitHub API to verify each repo, filters out noise (bots, mirrors, archived repos, etc.), and writes a new scored CSV to `data/processed/`.
 
 You'll need a GitHub personal access token for API rate limits, which you will hit very quickly:
+
 ```bash
 export GITHUB_TOKEN=your_token_here
 ```
@@ -137,7 +148,7 @@ print(f'Done: {len(rows)} repos')
 "
 ```
 
-**(and submit a PR -- I would love to get fresh data :) )
+**(and submit a PR -- I would love to get fresh data :smile:)
 
 ---
 

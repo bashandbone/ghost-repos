@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["httpx", "rich"]
+# ///
+# sourcery skip: avoid-global-variables
 """
 ghost_repos_v2.py - Verify BigQuery v2 results against the GitHub API.
 
@@ -18,15 +23,15 @@ import math
 import os
 import sys
 import time
-from dataclasses import dataclass, asdict, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 import httpx
 from rich.console import Console
-from rich.table import Table
 from rich.progress import track
+from rich.table import Table
 
-console = Console()
+console = Console(markup=True)
 
 
 @dataclass
@@ -63,11 +68,12 @@ class GhostRepo:
 
 
 def load_bigquery_csv(path: Path) -> list[GhostRepo]:
+    """Load BigQuery CSV export into a list of GhostRepo objects."""
     repos = []
     with open(path) as f:
         reader = csv.DictReader(f)
-        for row in reader:
-            repos.append(GhostRepo(
+        repos.extend(
+            GhostRepo(
                 repo_name=row["repo_name"],
                 push_events=int(row.get("push_events", 0)),
                 total_commits=int(row.get("total_commits", 0)),
@@ -75,7 +81,9 @@ def load_bigquery_csv(path: Path) -> list[GhostRepo]:
                 distinct_pushers=int(row.get("distinct_pushers", 0)),
                 active_months=int(row.get("active_months", 0)),
                 stars_gained_2025=int(row.get("stars_gained_2025", 0)),
-            ))
+            )
+            for row in reader
+        )
     return repos
 
 
@@ -87,18 +95,15 @@ def verify_repo(client: httpx.Client, repo: GhostRepo) -> bool:
         if resp.status_code == 404:
             return False
 
-        if resp.status_code in (403, 429):
-            body = resp.text
+        if resp.status_code in (403, 429) and (body := resp.text):
             console.print(f"[red]403/429 body: {body[:200]}[/red]")
-        
+
             # TOS-blocked or DMCA'd repo — skip it, not a rate limit
             if "access blocked" in body or "Repository unavailable" in body:
-                console.print(f"[yellow]Repo blocked (TOS/DMCA), skipping[/yellow]")
+                console.print("[yellow]Repo blocked (TOS/DMCA), skipping[/yellow]")
                 return False
-        
-            # Actual rate limit — wait and retry
-            retry_after = resp.headers.get("retry-after")
-            if retry_after:
+
+            if retry_after := resp.headers.get("retry-after"):
                 wait = int(retry_after) + 2
             else:
                 reset = int(resp.headers.get("x-ratelimit-reset", 0))
@@ -129,6 +134,7 @@ def verify_repo(client: httpx.Client, repo: GhostRepo) -> bool:
 
 
 def filter_noise(repo: GhostRepo) -> tuple[bool, str]:
+    """Apply heuristics to filter out noise repos. Returns (keep, reason)."""
     if repo.is_fork:
         return False, "fork"
     if repo.is_archived:
@@ -144,18 +150,32 @@ def filter_noise(repo: GhostRepo) -> tuple[bool, str]:
         return False, "profile repo"
 
     noise_patterns = [
-        "mirror", "backup", "dotfiles", "upptime", "statuspage",
-        ".github.io", "homebrew-", "ansible-role", "terraform-",
-        "nixpkgs", "gentoo", "kernel", "slackbuilds",
+        "mirror",
+        "backup",
+        "dotfiles",
+        "upptime",
+        "statuspage",
+        ".github.io",
+        "homebrew-",
+        "ansible-role",
+        "terraform-",
+        "nixpkgs",
+        "gentoo",
+        "kernel",
+        "slackbuilds",
     ]
-    for pattern in noise_patterns:
-        if pattern in name_lower:
-            return False, f"noise: {pattern}"
-
-    return True, ""
+    return next(
+        (
+            (False, f"noise: {pattern}")
+            for pattern in noise_patterns
+            if pattern in name_lower
+        ),
+        (True, ""),
+    )
 
 
 def print_results(repos: list[GhostRepo], top_n: int = 40) -> None:
+    """Print the top ghost repos in a formatted table."""
     table = Table(
         title=f"?? Top {min(top_n, len(repos))} Ghost Repos",
         show_lines=True,
@@ -184,18 +204,33 @@ def print_results(repos: list[GhostRepo], top_n: int = 40) -> None:
             str(repo.distinct_pushers),
             str(repo.active_months),
             repo.created_at,
-            (repo.description[:42] + "...") if len(repo.description) > 42 else repo.description,
+            (
+                f"{repo.description[:42]}..."
+                if len(repo.description) > 42
+                else repo.description
+            ),
         )
 
     console.print(table)
 
 
 def save_results(repos: list[GhostRepo], path: Path) -> None:
+    """Save the verified repos to a new CSV with computed ghost scores."""
     fields = [
-        "repo_name", "push_events", "total_commits", "total_stars",
-        "ghost_score", "language", "description", "created_at",
-        "distinct_pushers", "active_months", "is_fork", "has_license",
-        "html_url", "topics",
+        "repo_name",
+        "push_events",
+        "total_commits",
+        "total_stars",
+        "ghost_score",
+        "language",
+        "description",
+        "created_at",
+        "distinct_pushers",
+        "active_months",
+        "is_fork",
+        "has_license",
+        "html_url",
+        "topics",
     ]
     with open(path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
@@ -207,9 +242,10 @@ def save_results(repos: list[GhostRepo], path: Path) -> None:
     console.print(f"\n[green]Saved {len(repos)} repos to {path}[/green]")
 
 
-def check_ratelimit(client):
+def check_ratelimit(client: httpx.Client) -> None:
+    """Check if we're authenticated and print rate limit status."""
     console.print("checking rate limits and headers")
-    present = 'pat' in client.headers.get("Authorization", "")
+    present = "pat" in client.headers.get("Authorization", "")
     if present:
         console.print("token still in headers")
     else:
@@ -224,24 +260,37 @@ def check_ratelimit(client):
         else:
             console.print("[green] authenticated -- let's continue [/green]")
     else:
-        console.print(f"[yellow] hmm, we don't have the rate key, keys: {ratecheck.json().keys()}")
+        console.print(
+            f"[yellow] hmm, we don't have the rate key, keys: {ratecheck.json().keys()}"
+        )
+
 
 def main() -> None:
+    """Main entry point: parse args, load CSV, verify repos, print and save results."""
     parser = argparse.ArgumentParser(description="Ghost Repos v2 - verify and score")
     parser.add_argument("csv_path", type=Path, help="BigQuery CSV export")
     parser.add_argument("--token", "-t", type=str, help="GitHub personal access token")
-    parser.add_argument("--max-stars", type=int, default=15,
-                        help="Max total stars to keep (default: 15)")
+    parser.add_argument(
+        "--max-stars",
+        type=int,
+        default=15,
+        help="Max total stars to keep (default: 15)",
+    )
     parser.add_argument("--top", type=int, default=50)
-    parser.add_argument("--output", "-o", type=Path,
-                        default=Path("ghost_repos_v2_scored.csv"))
+    parser.add_argument(
+        "--output", "-o", type=Path, default=Path("ghost_repos_v2_scored.csv")
+    )
     args = parser.parse_args()
 
     repos = load_bigquery_csv(args.csv_path)
     console.print(f"Loaded {len(repos)} repos from BigQuery export")
 
     headers = {"Accept": "application/vnd.github.v3+json"}
-    token = args.token or os.environ.get("MISE_GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    token = (
+        args.token
+        or os.environ.get("MISE_GITHUB_TOKEN")
+        or os.environ.get("GITHUB_TOKEN")
+    )
     if token:
         headers["Authorization"] = f"Bearer {token}"
         console.print("[green]Authenticated (5,000 req/hr)[/green]")
