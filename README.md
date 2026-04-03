@@ -144,8 +144,14 @@ I plan to further optimize the query based on [lessons](https://github.com/basha
 
 ### 3. Set up the environment
 
+**Recommended**: using `uv` ([install uv](https://github.com/astral-sh/uv#installation))
+
 ```bash
 # Uses uv
+# optionally create an environment:
+uv venv .venv && source .venv/bin/activate
+
+# sync dependencies:
 uv sync
 ```
 
