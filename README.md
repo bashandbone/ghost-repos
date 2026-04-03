@@ -63,7 +63,7 @@ I queried the [GitHub Archive](https://www.gharchive.org/) using Google Cloud Bi
 
 #### The query went through **six iterations** (v1–v5, then v6.1) to filter out noise and surface genuinely high-effort projects. 
 
-[v6.1 is the final version](queries/latest.sql) — it extended the date range to cover 2025 and early 2026, raised the activity threshold to 8+ active months, and added more noise filter patterns, focusing on repo quality signals like pull requests. 
+[v6.1 is the final version](https://github.com/bashandbone/ghost-repos/blob/main/queries/v06.1_codeweaver_expansion.sql) — it extended the date range to cover 2025 and early 2026, raised the activity threshold to 8+ active months, and added more noise filter patterns, focusing on repo quality signals like pull requests. 
 
 See [`queries/README.md`](queries/README.md) for a full description of each iteration and what I learned.
 
