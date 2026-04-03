@@ -13,7 +13,7 @@
       --surface2: #21262d;
       --border:   #30363d;
       --text:     #e6edf3;
-      --muted:    #8b949e;
+      --muted:    #9eaab6;
       --purple:   #a78bfa;
       --blue:     #58a6ff;
       --green:    #3fb950;
@@ -33,6 +33,27 @@
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
+    /* Accessibility utilities */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .skip-link {
+      position: absolute; top: -100%; left: 50%; transform: translateX(-50%);
+      background: var(--purple); color: #fff; padding: 8px 16px;
+      border-radius: 0 0 var(--radius) var(--radius);
+      font-size: 14px; font-weight: 600; z-index: 100;
+      transition: top .15s;
+    }
+    .skip-link:focus { top: 0; text-decoration: none; }
+
+    /* Focus styles */
+    :focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 2px;
+    }
+
     /* HEADER */
     .site-header {
       background: linear-gradient(180deg, #080c12 0%, var(--bg) 100%);
@@ -40,15 +61,16 @@
       padding: 52px 20px 36px;
       text-align: center;
     }
-    .ghost-icon { font-size: 52px; display: block; margin-bottom: 14px; filter: drop-shadow(0 0 16px rgba(167,139,250,.4)); }
+    .site-logo {
+      display: block;
+      width: clamp(220px, 50vw, 480px);
+      height: auto;
+      margin: 0 auto 14px;
+      filter: drop-shadow(0 0 16px rgba(167,139,250,.4));
+    }
     .site-header h1 {
-      font-size: clamp(30px, 6vw, 52px);
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      background: linear-gradient(135deg, #e6edf3 20%, var(--purple) 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      line-height: 0;
+      font-size: 0;
     }
     .site-header .tagline {
       margin-top: 14px;
@@ -85,6 +107,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 10px;
+      list-style: none;
     }
     .stat-card {
       background: var(--surface);
@@ -101,7 +124,7 @@
       letter-spacing: -1px;
     }
     .stat-card .lbl {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       margin-top: 4px;
       text-transform: uppercase;
@@ -125,7 +148,7 @@
       gap: 8px;
     }
     .pill {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 500;
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -174,7 +197,7 @@
     .featured-card.c-red::before    { background: var(--red); }
     .featured-card:hover { border-color: #58677a; transform: translateY(-2px); }
     .featured-tag {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: .6px;
       text-transform: uppercase;
@@ -203,7 +226,7 @@
     }
     .chip-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: auto; }
     .chip {
-      font-size: 11px;
+      font-size: 12px;
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 4px;
@@ -235,19 +258,21 @@
     .search-input {
       width: 100%; background: var(--bg); border: 1px solid var(--border);
       border-radius: 6px; color: var(--text); padding: 7px 10px 7px 30px;
-      font-size: 13px; outline: none; transition: border-color .15s;
+      font-size: 13px; transition: border-color .15s;
     }
-    .search-input:focus { border-color: var(--blue); }
+    .search-input:focus { border-color: var(--blue); outline: none; }
+    .search-input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
     .search-input::placeholder { color: var(--muted); }
     select {
       background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
       color: var(--text); padding: 7px 26px 7px 10px; font-size: 13px;
-      outline: none; cursor: pointer; appearance: none;
+      cursor: pointer; appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 8px center;
       transition: border-color .15s;
     }
-    select:focus { border-color: var(--blue); }
+    select:focus { border-color: var(--blue); outline: none; }
+    select:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
     .controls-right { display: flex; gap: 8px; align-items: center; margin-left: auto; }
     .view-toggle { display: flex; gap: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
     .view-btn {
@@ -318,15 +343,15 @@
     .lang-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .lang-name { font-size: 12px; color: var(--muted); }
     .metric-val { font-size: 13px; }
-    .metric-lbl { font-size: 10px; color: var(--muted); display: block; }
-    .badge { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500; }
+    .metric-lbl { font-size: 11px; color: var(--muted); display: block; }
+    .badge { font-size: 11px; padding: 1px 6px; border-radius: 3px; font-weight: 500; }
     .badge.tests { background: rgba(63,185,80,.1); color: var(--green); border: 1px solid rgba(63,185,80,.2); }
     .badge.ci    { background: rgba(88,166,255,.1); color: var(--blue);  border: 1px solid rgba(88,166,255,.2); }
     .badge.solo  { background: rgba(167,139,250,.1);color: var(--purple);border: 1px solid rgba(167,139,250,.2); }
     .badge.rel   { background: rgba(57,197,207,.1); color: var(--teal);  border: 1px solid rgba(57,197,207,.2); }
-    .badge.fp    { background: rgba(167,139,250,.15);color: var(--purple);border: 1px solid rgba(167,139,250,.4); font-size:9px; }
+    .badge.fp    { background: rgba(167,139,250,.15);color: var(--purple);border: 1px solid rgba(167,139,250,.4); }
     .score-val { font-size: 14px; font-weight: 700; color: var(--purple); }
-    .score-sub { font-size: 10px; color: var(--muted); }
+    .score-sub { font-size: 11px; color: var(--muted); }
     .star-val { color: var(--yellow); font-size: 12px; }
 
     /* EMPTY / LOADING */
@@ -360,13 +385,21 @@
       .list-header, .repo-row { grid-template-columns: 1fr auto; }
       .list-header .hide-sm, .repo-row .hide-sm { display: none; }
     }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
 
+<a href="#results" class="skip-link">Skip to results</a>
+
 <header class="site-header">
-  <span class="ghost-icon">👻</span>
-  <h1>Ghost Repos</h1>
+  <h1><img src="assets/ghostrepo-dark-text.svg" alt="Ghost Repos" class="site-logo" /></h1>
   <p class="tagline">
     GitHub repositories with years of sustained effort, thousands of commits, and almost no stars.
     These are the most dedicated invisible projects on the internet.
@@ -376,42 +409,42 @@
   </a>
 </header>
 
-<div class="stats-section">
-  <div class="stats-grid">
-    <div class="stat-card">
+<section class="stats-section" aria-label="Dataset statistics">
+  <ul class="stats-grid" role="list">
+    <li class="stat-card">
       <div class="val">401</div>
       <div class="lbl">Ghost repos</div>
-    </div>
-    <div class="stat-card accent-teal">
+    </li>
+    <li class="stat-card accent-teal">
       <div class="val">578k</div>
       <div class="lbl">Combined commits</div>
-    </div>
-    <div class="stat-card accent-yellow">
+    </li>
+    <li class="stat-card accent-yellow">
       <div class="val">116×</div>
       <div class="lbl">Commits per star</div>
-    </div>
-    <div class="stat-card accent-green">
+    </li>
+    <li class="stat-card accent-green">
       <div class="val">3.7y</div>
       <div class="lbl">Avg repo age</div>
-    </div>
-    <div class="stat-card">
+    </li>
+    <li class="stat-card">
       <div class="val">52</div>
       <div class="lbl">With zero stars</div>
-    </div>
-    <div class="stat-card accent-blue">
+    </li>
+    <li class="stat-card accent-blue">
       <div class="val">96%</div>
       <div class="lbl">Have CI/CD</div>
-    </div>
-    <div class="stat-card accent-green">
+    </li>
+    <li class="stat-card accent-green">
       <div class="val">44%</div>
       <div class="lbl">Have tests</div>
-    </div>
-    <div class="stat-card">
+    </li>
+    <li class="stat-card">
       <div class="val">5,001</div>
       <div class="lbl">Combined stars</div>
-    </div>
-  </div>
-</div>
+    </li>
+  </ul>
+</section>
 
 <main class="main">
 
@@ -435,16 +468,19 @@
 
     <div class="controls">
       <div class="search-wrap">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
+        <label for="search" class="sr-only">Search repositories</label>
         <input class="search-input" type="search" id="search" placeholder="Search name, description, language…" />
       </div>
 
+      <label for="filter-lang" class="sr-only">Filter by language</label>
       <select id="filter-lang">
         <option value="">All languages</option>
       </select>
 
+      <label for="filter-stars" class="sr-only">Filter by stars</label>
       <select id="filter-stars">
         <option value="">Any stars</option>
         <option value="0">0 stars</option>
@@ -453,6 +489,7 @@
         <option value="21-50">21–50 stars</option>
       </select>
 
+      <label for="filter-team" class="sr-only">Filter by team size</label>
       <select id="filter-team">
         <option value="">Any team size</option>
         <option value="1">Solo (1 dev)</option>
@@ -460,6 +497,7 @@
         <option value="4+">Larger team (4+)</option>
       </select>
 
+      <label for="filter-quality" class="sr-only">Filter by quality signals</label>
       <select id="filter-quality">
         <option value="">Any quality</option>
         <option value="tests">Has tests</option>
@@ -467,6 +505,7 @@
         <option value="both">Tests + CI</option>
       </select>
 
+      <label for="sort-by" class="sr-only">Sort results</label>
       <select id="sort-by">
         <option value="c_score">Sort: Combined score</option>
         <option value="g_score">Sort: Ghost score</option>
@@ -479,10 +518,10 @@
       </select>
 
       <div class="controls-right">
-        <span class="results-count" id="results-count"></span>
-        <div class="view-toggle">
-          <button class="view-btn active" id="view-grid" title="Grid view">⊞</button>
-          <button class="view-btn" id="view-list" title="List view">☰</button>
+        <span class="results-count" id="results-count" aria-live="polite"></span>
+        <div class="view-toggle" role="group" aria-label="Results view">
+          <button class="view-btn active" id="view-grid" title="Grid view" aria-pressed="true">⊞</button>
+          <button class="view-btn" id="view-list" title="List view" aria-pressed="false">☰</button>
         </div>
       </div>
     </div>
@@ -498,12 +537,11 @@
 </main>
 
 <footer class="site-footer">
-  Data collected March–April 2026 &nbsp;·&nbsp;
+  <p>Data collected March–April 2026 &nbsp;·&nbsp;
   <a href="https://github.com/bashandbone/ghost-repos" target="_blank" rel="noopener">bashandbone/ghost-repos</a> &nbsp;·&nbsp;
   Source: <a href="https://www.gharchive.org/" target="_blank" rel="noopener">GitHub Archive</a> via BigQuery &nbsp;·&nbsp;
-  MIT License
-  <br style="margin-bottom:6px" />
-  Built by <a href="https://github.com/bashandbone" target="_blank" rel="noopener">@bashandbone</a> because GitHub can't surface projects like these &mdash; we're working on that at <a href="https://knitli.com" target="_blank" rel="noopener">Knitli</a>.
+  MIT License</p>
+  <p style="margin-top:6px">Built by <a href="https://github.com/bashandbone" target="_blank" rel="noopener">@bashandbone</a> because GitHub can't surface projects like these &mdash; we're working on that at <a href="https://knitli.com" target="_blank" rel="noopener">Knitli</a>.</p>
 </footer>
 
 <script>
@@ -764,7 +802,7 @@ function renderRow(r) {
   <div class="repo-row${isFP?' is-featured':''}">
     <div>
       <div class="repo-name">
-        ${isFP?'<span style="color:var(--purple);font-size:10px;margin-right:4px">★</span>':''}
+        ${isFP?'<span style="color:var(--purple);font-size:11px;margin-right:4px">★</span>':''}
         <a href="${r.url}" target="_blank" rel="noopener">${shortName}</a>
       </div>
       <div class="repo-desc one-line" style="margin-top:1px">${r.desc||''}</div>
@@ -810,6 +848,8 @@ function setView(mode) {
   viewMode = mode;
   document.getElementById('view-grid').classList.toggle('active', mode==='grid');
   document.getElementById('view-list').classList.toggle('active', mode==='list');
+  document.getElementById('view-grid').setAttribute('aria-pressed', mode==='grid');
+  document.getElementById('view-list').setAttribute('aria-pressed', mode==='list');
   renderPage();
 }
 </script>
